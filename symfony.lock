@@ -247,6 +247,9 @@
     "phpspec/prophecy": {
         "version": "v1.10.3"
     },
+    "phpstan/phpdoc-parser": {
+        "version": "0.4.12"
+    },
     "phpstan/phpstan": {
         "version": "0.12.28"
     },
@@ -288,6 +291,9 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/event-dispatcher": {
+        "version": "1.0.0"
+    },
     "psr/http-client": {
         "version": "1.0.1"
     },
@@ -308,6 +314,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "respect/stringifier": {
+        "version": "0.2.0"
     },
     "respect/validation": {
         "version": "1.1.31"
@@ -377,6 +386,9 @@
     },
     "smarty/smarty": {
         "version": "v2.6.31"
+    },
+    "sokil/php-isocodes": {
+        "version": "3.3.4"
     },
     "squizlabs/php_codesniffer": {
         "version": "3.0",
@@ -528,6 +540,9 @@
             "./tests/bootstrap.php"
         ]
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.22.1"
+    },
     "symfony/polyfill-intl-idn": {
         "version": "v1.17.0"
     },
@@ -604,6 +619,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.4.9"
+    },
+    "symfony/string": {
+        "version": "v5.2.4"
     },
     "symfony/translation": {
         "version": "3.3",
