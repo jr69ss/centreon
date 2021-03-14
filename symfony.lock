@@ -17,9 +17,6 @@
     "behat/mink-browserkit-driver": {
         "version": "v1.3.4"
     },
-    "behat/mink-extension": {
-        "version": "2.3.1"
-    },
     "behat/mink-goutte-driver": {
         "version": "v1.2.1"
     },
@@ -89,6 +86,12 @@
     "fabpot/goutte": {
         "version": "v3.3.0"
     },
+    "facade/ignition-contracts": {
+        "version": "1.0.2"
+    },
+    "filp/whoops": {
+        "version": "2.9.2"
+    },
     "friends-of-behat/mink-extension": {
         "version": "2.3.1"
     },
@@ -121,9 +124,6 @@
     },
     "jms/metadata": {
         "version": "1.7.0"
-    },
-    "jms/parser-lib": {
-        "version": "1.0.0"
     },
     "jms/serializer": {
         "version": "1.14.1"
@@ -175,6 +175,9 @@
     "nikic/php-parser": {
         "version": "v4.5.0"
     },
+    "nunomaduro/collision": {
+        "version": "v5.3.0"
+    },
     "nyholm/psr7": {
         "version": "1.0",
         "recipe": {
@@ -198,6 +201,21 @@
     },
     "pear/pear_exception": {
         "version": "v1.0.1"
+    },
+    "pestphp/pest": {
+        "version": "v1.0.3"
+    },
+    "pestphp/pest-plugin": {
+        "version": "v1.0.0"
+    },
+    "pestphp/pest-plugin-coverage": {
+        "version": "v1.0.0"
+    },
+    "pestphp/pest-plugin-expectations": {
+        "version": "v1.0.1"
+    },
+    "pestphp/pest-plugin-init": {
+        "version": "v1.0.0"
     },
     "phar-io/manifest": {
         "version": "1.0.3"
@@ -229,9 +247,6 @@
     "php-http/promise": {
         "version": "1.1.0"
     },
-    "phpcollection/phpcollection": {
-        "version": "0.5.0"
-    },
     "phpdocumentor/reflection-common": {
         "version": "2.1.0"
     },
@@ -240,9 +255,6 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.1.0"
-    },
-    "phpoption/phpoption": {
-        "version": "1.7.4"
     },
     "phpspec/prophecy": {
         "version": "v1.10.3"
@@ -430,9 +442,6 @@
     "symfony/css-selector": {
         "version": "v4.4.9"
     },
-    "symfony/debug": {
-        "version": "v4.4.9"
-    },
     "symfony/dependency-injection": {
         "version": "v4.4.9"
     },
@@ -505,9 +514,6 @@
         "version": "v4.4.9"
     },
     "symfony/http-kernel": {
-        "version": "v4.4.9"
-    },
-    "symfony/inflector": {
         "version": "v4.4.9"
     },
     "symfony/maker-bundle": {
