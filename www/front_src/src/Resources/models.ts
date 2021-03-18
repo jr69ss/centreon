@@ -44,7 +44,7 @@ export interface Resource extends NamedEntity {
 
 export type CompactParent = Pick<Resource, 'id' | 'status' | 'name'>;
 
-export type CompactResource = CompactParent & { parent?: CompactParent };
+export type CompactResource = CompactParent;
 
 export type ResourceListing = ListingModel<Resource>;
 
