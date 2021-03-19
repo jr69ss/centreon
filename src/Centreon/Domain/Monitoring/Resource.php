@@ -46,14 +46,17 @@ class Resource
     // Groups for validation
     public const VALIDATION_GROUP_ACK_HOST = ['ack_host'];
     public const VALIDATION_GROUP_ACK_SERVICE = ['ack_service'];
+    public const VALIDATION_GROUP_ACK_META = ['ack_meta'];
     public const VALIDATION_GROUP_DISACK_HOST = ['disack_host'];
     public const VALIDATION_GROUP_DISACK_SERVICE = ['disack_service'];
     public const VALIDATION_GROUP_DOWNTIME_HOST = ['downtime_host'];
+    public const VALIDATION_GROUP_DOWNTIME_META = ['downtime_meta'];
     public const VALIDATION_GROUP_DOWNTIME_SERVICE = ['downtime_service'];
 
     // Types
     public const TYPE_SERVICE = 'service';
     public const TYPE_HOST = 'host';
+    public const TYPE_META = 'metaservice';
 
     /**
      * @var int|null
@@ -91,7 +94,7 @@ class Resource
     protected $commandLine;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $monitoringServerName;
 
@@ -226,6 +229,13 @@ class Resource
      * @var ResourceGroup[]
      */
     private $groups = [];
+
+    /**
+     * Calculation type of the Resource
+     *
+     * @var string|null
+     */
+    private $calculationType;
 
     /**
      * Resource constructor.
@@ -430,10 +440,10 @@ class Resource
     }
 
    /**
-     * @param string $monitoringServerName
+     * @param string|null $monitoringServerName
      * @return self
      */
-    public function setMonitoringServerName(string $monitoringServerName): self
+    public function setMonitoringServerName(?string $monitoringServerName): self
     {
         $this->monitoringServerName = $monitoringServerName;
         return $this;
@@ -938,5 +948,23 @@ class Resource
         $this->groups = $groups;
 
         return $this;
+    }
+
+    /**
+     * @param string|null $calculationType
+     * @return self
+     */
+    public function setCalculationType(?string $calculationType): self
+    {
+        $this->calculationType = $calculationType;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCalculationType(): ?string
+    {
+        return $this->calculationType;
     }
 }

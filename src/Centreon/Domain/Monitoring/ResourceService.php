@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Centreon\Domain\Monitoring;
 
 use Centreon\Domain\Entity\EntityValidator;
+use Centreon\Domain\MetaServiceConfiguration\Exception\MetaServiceConfigurationException;
+use Centreon\Domain\MetaServiceConfiguration\Interfaces\MetaServiceConfigurationReadRepositoryInterface;
 use Centreon\Domain\Monitoring\ResourceGroup;
 use Centreon\Domain\Monitoring\ResourceFilter;
 use Centreon\Domain\Repository\RepositoryException;
@@ -58,6 +60,11 @@ class ResourceService extends AbstractCentreonService implements ResourceService
     private $accessGroupRepository;
 
     /**
+     * @var MetaServiceConfigurationReadRepositoryInterface
+     */
+    private $metaServiceConfigurationRepository;
+
+    /**
      * @param ResourceRepositoryInterface $resourceRepository
      * @param MonitoringRepositoryInterface $monitoringRepository,
      * @param AccessGroupRepositoryInterface $accessGroupRepository
@@ -65,11 +72,13 @@ class ResourceService extends AbstractCentreonService implements ResourceService
     public function __construct(
         ResourceRepositoryInterface $resourceRepository,
         MonitoringRepositoryInterface $monitoringRepository,
-        AccessGroupRepositoryInterface $accessGroupRepository
+        AccessGroupRepositoryInterface $accessGroupRepository,
+        MetaServiceConfigurationReadRepositoryInterface $metaServiceConfigurationRepository
     ) {
         $this->resourceRepository = $resourceRepository;
         $this->monitoringRepository = $monitoringRepository;
         $this->accessGroupRepository = $accessGroupRepository;
+        $this->metaServiceConfigurationRepository = $metaServiceConfigurationRepository;
     }
 
     /**
@@ -115,7 +124,7 @@ class ResourceService extends AbstractCentreonService implements ResourceService
         } catch (RepositoryException $ex) {
             throw new ResourceException($ex->getMessage(), 0, $ex);
         } catch (\Exception $ex) {
-            throw new ResourceException(_('Error while searching for resources'), 0, $ex);
+            throw new ResourceException($ex->getMessage(), 0, $ex);
         }
 
         return $list;
@@ -202,6 +211,44 @@ class ResourceService extends AbstractCentreonService implements ResourceService
          * Add those groups to the actual resource detailed.
          */
         $resource->setGroups($resourceGroups);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function enrichMetaServiceWithDetails(ResourceEntity $resource): void
+    {
+        $service = $this->monitoringRepository->findOneServiceByDescription('meta_' . $resource->getId());
+
+        if ($service === null) {
+            throw new ResourceException(_('Could not find service attached to the Meta service'));
+        }
+
+        $downtimes = $this->monitoringRepository->findDowntimes(
+            $service->getHost()->getId(),
+            $service->getId()
+        );
+        $resource->setDowntimes($downtimes);
+
+        if ($resource->getAcknowledged()) {
+            $acknowledgements = $this->monitoringRepository->findAcknowledgements(
+                $service->getHost()->getId(),
+                $service->getId()
+            );
+            if (!empty($acknowledgements)) {
+                $resource->setAcknowledgement($acknowledgements[0]);
+            }
+        }
+        /**
+         * Specific to the Meta Service Resource Type
+         * we need to add the Meta Service calculationType
+         */
+        $metaConfiguration = $this->contact->isAdmin()
+            ? $this->metaServiceConfigurationRepository->findById($resource->getId())
+            : $this->metaServiceConfigurationRepository->findByIdAndContact($resource->getId(), $this->contact);
+
+        $resource->setCalculationType($metaConfiguration->getCalculationType());
     }
 
     /**
