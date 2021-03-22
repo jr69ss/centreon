@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Centreon\Infrastructure\Monitoring\Resource\Provider;
 
+use Centreon\Infrastructure\Repository\AbstractRepositoryDRB;
 use Centreon\Infrastructure\Monitoring\Resource\Provider\ProviderInterface;
+use Centreon\Infrastructure\DatabaseConnection;
 use Centreon\Infrastructure\RequestParameters\SqlRequestParametersTranslator;
 use Centreon\Domain\RequestParameters\RequestParameters;
 
-abstract class Provider implements ProviderInterface
+abstract class Provider extends AbstractRepositoryDRB implements ProviderInterface
 {
     /**
      * @var SqlRequestParametersTranslator
@@ -53,6 +55,13 @@ abstract class Provider implements ProviderInterface
         'h.fqdn' => 'sh.address',
         's.description' => 's.description',
     ];
+
+    /**
+     * @param DatabaseConnection $databaseConnection
+     */
+    public function __construct(DatabaseConnection $databaseConnection) {
+        $this->db = $databaseConnection;
+    }
 
     /**
      * @inheritDoc
@@ -83,9 +92,23 @@ abstract class Provider implements ProviderInterface
      */
     protected function hasOnlyServiceSearch(): bool
     {
-        return $this->hasOnlyConcordanceSearch($this->serviceConcordances);
+        $serviceOnlyConcordances = [];
+        foreach (array_keys($this->serviceConcordances) as $serviceOnlyConcordanceKey) {
+            if (!in_array($serviceOnlyConcordanceKey, array_keys($this->hostConcordances))) {
+                $serviceOnlyConcordances[$serviceOnlyConcordanceKey] =
+                    $this->serviceConcordances[$serviceOnlyConcordanceKey];
+            }
+        }
+
+        return $this->hasOnlyConcordanceSearch($serviceOnlyConcordances);
     }
 
+    /**
+     * Check if search contains keys from only given concordances
+     *
+     * @param array $concordances
+     * @return boolean
+     */
     private function hasOnlyConcordanceSearch(array $concordances): bool
     {
         $search = $this->sqlRequestTranslator->getRequestParameters()->getSearch();
@@ -107,6 +130,6 @@ abstract class Provider implements ProviderInterface
             return count($searchNames) === count($concordanceMatches);
         }
 
-        return !empty($searchNames);
+        return !empty($concordanceMatches);
     }
 }

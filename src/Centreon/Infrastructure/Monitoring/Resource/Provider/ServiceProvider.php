@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Centreon\Infrastructure\Monitoring\Resource\Provider;
 
 use Centreon\Infrastructure\Monitoring\Resource\Provider\Provider;
+use Centreon\Domain\Monitoring\Resource;
 use Centreon\Domain\Monitoring\ResourceFilter;
 use Centreon\Domain\Monitoring\ResourceStatus;
 use Centreon\Domain\Monitoring\Interfaces\ResourceServiceInterface;
@@ -90,10 +91,11 @@ final class ServiceProvider extends Provider
         $sql = "SELECT DISTINCT
             s.service_id AS `id`,
             'service' AS `type`,
-            sh.host_id AS `host_id`,
             s.description AS `name`,
             NULL AS `alias`,
             NULL AS `fqdn`,
+            sh.host_id AS `host_id`,
+            s.service_id AS `service_id`,
             s.icon_image_alt AS `icon_name`,
             s.icon_image AS `icon_url`,
             s.action_url AS `action_url`,
@@ -292,5 +294,57 @@ final class ServiceProvider extends Provider
         }
 
         return $sql;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function excludeResourcesWithoutMetrics(array $resources): array
+    {
+        $filteredResources = [];
+        $collector = new StatementCollector();
+        $where = [];
+        $serviceResources = [];
+
+        foreach ($resources as $key => $resource) {
+            if ($resource->getType() === Resource::TYPE_SERVICE) {
+                $where[] = "(i.host_id = :host_id_{$key} AND i.service_id = :service_id_{$key})";
+                $collector->addValue(":service_id_{$key}", $resource->getId(), \PDO::PARAM_INT);
+                $collector->addValue(":host_id_{$key}", $resource->getParent()->getId(), \PDO::PARAM_INT);
+                $serviceResources[] = $resource;
+            } else {
+                $filteredResources[] = $resource;
+            }
+        }
+
+        if (empty($serviceResources)) {
+            return $filteredResources;
+        }
+
+        $statement = $this->db->prepare(
+            $this->translateDbName(
+                'SELECT i.host_id, i.service_id
+                FROM `:dbstg`.metrics AS m, `:dbstg`.index_data AS i
+                WHERE (' . implode(' OR ', $where) . ')
+                AND i.id = m.index_id
+                AND m.hidden = "0"
+                GROUP BY host_id, service_id'
+            )
+        );
+        $collector->bind($statement);
+        $statement->execute();
+
+        while ($row = $statement->fetch()) {
+            foreach ($serviceResources as $serviceResource) {
+                if (
+                    $serviceResource->getParent()->getId() === (int)$row['host_id']
+                    && $serviceResource->getId() === (int)$row['service_id']
+                ) {
+                    $filteredResources[] = $serviceResource;
+                }
+            }
+        }
+
+        return $filteredResources;
     }
 }

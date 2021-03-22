@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Centreon\Infrastructure\Monitoring\Resource\Provider;
 
 use Centreon\Infrastructure\Monitoring\Resource\Provider\Provider;
+use Centreon\Domain\Monitoring\Resource;
 use Centreon\Domain\Monitoring\ResourceFilter;
 use Centreon\Domain\Monitoring\ResourceStatus;
 use Centreon\Domain\Monitoring\Interfaces\ResourceServiceInterface;
@@ -91,10 +92,11 @@ final class HostProvider extends Provider
         $sql = "SELECT DISTINCT
             h.host_id AS `id`,
             'host' AS `type`,
-            h.host_id AS `host_id`,
             h.name AS `name`,
             h.alias AS `alias`,
             h.address AS `fqdn`,
+            h.host_id AS `host_id`,
+            NULL AS `service_id`,
             h.icon_image_alt AS `icon_name`,
             h.icon_image AS `icon_url`,
             h.action_url AS `action_url`,
@@ -246,5 +248,21 @@ final class HostProvider extends Provider
         }
 
         return $sql;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function excludeResourcesWithoutMetrics(array $resources): array
+    {
+        $filteredResources = [];
+
+        foreach ($resources as $resource) {
+            if ($resource->getType() !== Resource::TYPE_HOST) {
+                $filteredResources[] = $resource;
+            }
+        }
+
+        return $filteredResources;
     }
 }
