@@ -191,3 +191,5 @@ export const labelExportToPng = 'Export to png';
 export const labelParent = 'Parent';
 export const labelSelectCriterias = 'Select criterias';
 export const labelMetrics = 'Metrics';
+export const labelMetaService = 'Meta service';
+export const labelCalculationType = 'Calculation type';

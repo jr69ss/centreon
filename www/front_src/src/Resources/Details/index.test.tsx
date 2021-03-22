@@ -784,6 +784,7 @@ describe(Details, () => {
     mockedAxios.get.mockResolvedValueOnce({
       data: {
         ...retrievedDetails,
+        type: resourceHostType,
         links: {
           ...retrievedDetails.links,
           uris: {
