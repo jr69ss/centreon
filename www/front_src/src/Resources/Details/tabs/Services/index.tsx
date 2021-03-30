@@ -126,7 +126,7 @@ const ServicesTabContent = ({
         {switchIcon}
       </IconButton>
       <InfiniteScroll<Resource>
-        preventReloadWhen={details?.type === 'service'}
+        preventReloadWhen={details?.type !== 'host'}
         sendListingRequest={sendListingRequest}
         details={details}
         loadingSkeleton={<LoadingSkeleton />}
