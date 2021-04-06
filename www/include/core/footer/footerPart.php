@@ -1,6 +1,7 @@
 <?php
+
 /*
- * Copyright 2005-2015 Centreon
+ * Copyright 2005-2021 Centreon
  * Centreon is developped by : Julien Mathis and Romain Le Merlus under
  * GPL Licence 2.0.
  *
@@ -129,21 +130,13 @@ if (!$min) {
             }
         }
 
-    </script>
 <?php
-
-if ((isset($_GET["mini"]) && $_GET["mini"] == 1) ||
-    (isset($_SESSION['fullScreen']) && isset($_SESSION['fullScreen']['value']) && $_SESSION['fullScreen']['value'])) {
-    ?>
-    <script type="text/javascript">
-        myToggleAll(0, false);
-    </script>
-<?php } else {
-    if (!$centreon->user->showDiv("footer")) {
-        ?>
-        <script type="text/javascript">new Effect.toggle('footer', 'blind', {duration: 0});</script> <?php
-    }
+if ((isset($_GET["mini"]) && $_GET["mini"] == 1) || !empty($_SESSION['fullScreen']['value'])) {
+    echo "myToggleAll(0, false);";
+} elseif (!$centreon->user->showDiv("footer")) {
+    echo "new Effect.toggle('footer', 'blind', {duration: 0});";
 }
+echo "</script>";
 
 /*
  * Create Data Flow
@@ -154,105 +147,53 @@ foreach ($jsdata as $k => $val) {
     echo "<span class=\"data hide\" id=\"" . $k . "\" data-" . $k . "=\"" . $val . "\"></span>";
 }
 
-?>
-
-    <script type='text/javascript'>
-        jQuery(function() {
-            initWholePage();
-
-            // convert URIs to links
-            jQuery(".containsURI").each(function() {
-                jQuery(this).linkify();
-            });
-        });
-
-        /*
-         * Init whole page
-         */
-        function initWholePage() {
-            setQuickSearchPosition();
-            jQuery().centreon_notify({
-                refresh_rate: <?php echo($centreon->optGen['AjaxTimeReloadMonitoring'] * 1000);?>
-            });
-        }
-
 /*
- * set quick search position
+ * Close all DB handler
  */
-function setQuickSearchPosition() {
-    if (jQuery('QuickSearch')) {
-        if (jQuery('header').is(':visible')) {
-          jQuery('QuickSearch').css({ top: '86px' });
-        } else {
-          jQuery('QuickSearch').css({ top: '3px' });
-        }
-    }
-    jQuery(".timepicker").timepicker();
-    jQuery(".datepicker").datepicker();
+if (isset($pearDB) && is_object($pearDB)) {
+    $pearDB = null;
 }
-<?php
-$featureToAsk = $centreonFeature->toAsk($centreon->user->get_id());
-if (count($featureToAsk) === 1) {
+if (isset($pearDBO) && is_object($pearDBO)) {
+    $pearDBO = null;
+}
+
 ?>
-var testingFeature = jQuery('<div/>')
-    .html(
-        '<h3>Feature testing</h3>' +
-        '<div style="margin: 2px;">Would you like to activate the feature flipping: <?php echo $featureToAsk[0]['name']; ?>  ?</div>' +
-        '<div style="margin: 2px; font-weight: bold;">Description: </div>' +
-        '<div style="margin: 2px;"> <?php echo $featureToAsk[0]['description']; ?>.</div>' +
-        '<div style="margin: 2px;">Please, give us your feedback on <a href="https://centreon.github.io">Slack</a> ' +
-        'or <a href="https://github.com/centreon/centreon/issues">Github</a>.</div>' +
-        '<div style="margin: 2px; font-weight: bold;">Legacy version: </div>' +
-        '<div style="margin: 2px;">You can switch back to the legacy version in my account page. ' +
-        '<div style="margin-top: 8px; text-align: center;">' +
-            '<button class="btc bt_success" onclick="featureEnable()" id="btcActivateFf" >Activate</button>' +
-            '&nbsp;<button class="btc bt_default" onclick="featureDisable()" id="btcDisableFf">No</button>' +
-        '</div>'
-    )
-    .css('position', 'relative');
 
-function validateFeature(name, version, enabled) {
-    jQuery.ajax({
-        url: './api/internal.php?object=centreon_featuretesting&action=enabled',
-        type: 'POST',
-        data: JSON.stringify({
-            name: name,
-            version: version,
-            enabled: enabled
-        }),
-        dataType: 'json',
-        success: function () {
-            location.reload()
+<script type='text/javascript'>
+    jQuery(function() {
+        initWholePage();
+
+        // convert URIs to links
+        jQuery(".containsURI").each(function() {
+            jQuery(this).linkify();
+        });
+    });
+
+    /*
+     * Init whole page
+     */
+    function initWholePage() {
+        setQuickSearchPosition();
+        jQuery().centreon_notify({
+            refresh_rate: <?php echo($centreon->optGen['AjaxTimeReloadMonitoring'] * 1000);?>
+        });
+    }
+
+    /*
+    * set quick search position
+    */
+    function setQuickSearchPosition() {
+        if (jQuery('QuickSearch')) {
+            if (jQuery('header').is(':visible')) {
+            jQuery('QuickSearch').css({ top: '86px' });
+            } else {
+            jQuery('QuickSearch').css({ top: '3px' });
+            }
         }
-    })
-}
+        jQuery(".timepicker").timepicker();
+        jQuery(".datepicker").datepicker();
+    }
 
-            function featureEnable() {
-              validateFeature(
-                "<?php echo $featureToAsk[0]['name']; ?>",
-                "<?php echo $featureToAsk[0]['version']; ?>",
-                true
-              );
-              testingFeature.centreonPopin("close");
-            }
-
-            function featureDisable() {
-              validateFeature(
-                "<?php echo $featureToAsk[0]['name']; ?>",
-                "<?php echo $featureToAsk[0]['version']; ?>",
-                true
-              );
-              testingFeature.centreonPopin("close");
-            }
-
-            testingFeature.centreonPopin({
-                isModal: true,
-                open: true
-            })
-        <?php
-}
-        ?>
-    
     // send an event to parent for change in iframe URL
     function parentHrefUpdate(href) {
       let parentHref = window.parent.location.href;
@@ -331,17 +272,6 @@ function validateFeature(name, version, enabled) {
         }
       }
     );
-    </script>
-    </body>
-    </html>
-<?php
-
-/*
- * Close all DB handler
- */
-if (isset($pearDB) && is_object($pearDB)) {
-    $pearDB = null;
-}
-if (isset($pearDBO) && is_object($pearDBO)) {
-    $pearDBO = null;
-}
+</script>
+</body>
+</html>

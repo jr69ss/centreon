@@ -47,9 +47,6 @@ function microtime_float()
     return ((float)$usec + (float)$sec);
 }
 
-set_time_limit(60);
-$time_start = microtime_float();
-
 $advanced_search = 0;
 
 /*
@@ -61,7 +58,6 @@ require_once "$classdir/centreonDB.class.php";
 require_once "$classdir/centreonLang.class.php";
 require_once "$classdir/centreonSession.class.php";
 require_once "$classdir/centreon.class.php";
-require_once "$classdir/centreonFeature.class.php";
 require_once SMARTY_DIR . "Smarty.class.php";
 
 /*
@@ -224,8 +220,3 @@ $DBRESULT = $pearDB->query($query);
 $centreonLang = new CentreonLang(_CENTREON_PATH_, $centreon);
 $centreonLang->bindLang();
 $centreonLang->bindLang('help');
-
-/**
- * Initialize features flipping
- */
-$centreonFeature = new CentreonFeature($pearDB);

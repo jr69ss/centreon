@@ -19,7 +19,6 @@ msgstr ""
 #: centreon-web/www/include/monitoring/downtime/AddDowntime.php:554
 #: centreon-web/www/include/monitoring/objectDetails/hostDetails.php:505
 #: centreon-web/www/include/monitoring/objectDetails/serviceDetails.php:599
-#: centreon-web/www/include/core/footer/footer.php:57
 #: centreon-web/www/include/Administration/parameters/general/form.php:289
 #: centreon-web/www/include/Administration/parameters/engine/form.php:111
 #: centreon-web/www/include/Administration/parameters/engine/form.php:211
@@ -2641,7 +2640,6 @@ msgstr "Recursos Compartilhados"
 
 #: centreon-web/www/include/options/accessLists/resourcesACL/formResourcesAccess.php:299
 #: centreon-web/www/include/options/media/images/formImg.php:211
-#: centreon-web/www/include/core/footer/footer.php:80
 #: centreon-web/www/include/core/footer/footerPart.php:53
 #: centreon-web/www/include/configuration/configGenerateTraps/formGenerateTraps.php:210
 #: centreon-web/www/include/configuration/configObject/servicegroup/formServiceGroup.php:205
@@ -5771,11 +5769,6 @@ msgstr "Fontes de dados"
 msgid "Split Components"
 msgstr "Separar Componentes"
 
-#: centreon-web/www/include/core/footer/footer.php:54
-msgid "Generated in "
-msgstr "Gerado em"
-
-#: centreon-web/www/include/core/footer/footer.php:60
 #: centreon-web/www/include/configuration/configObject/service/formService.php:1135
 #: centreon-web/www/include/configuration/configObject/service_template_model/formServiceTemplateModel.php:1002
 #: centreon-web/www/include/configuration/configObject/hostgroup/formHostGroup.php:272
@@ -5783,10 +5776,6 @@ msgstr "Gerado em"
 #: centreon-web/www/include/configuration/configObject/host_categories/formHostCategories.php:276
 msgid "Documentation"
 msgstr "Documentação"
-
-#: centreon-web/www/include/core/footer/footer.php:66
-msgid "Help Desk"
-msgstr "Assistencia"
 
 #: centreon-web/www/include/core/errors/alt_error.php:40
 msgid "You are not allowed to reach this page"

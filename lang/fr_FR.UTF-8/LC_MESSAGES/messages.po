@@ -319,7 +319,6 @@ msgstr "Générer les graphiques de statut"
 #: centreon-web/www/include/configuration/configObject/escalation/formEscalation.php:305
 #: centreon-web/www/include/configuration/configObject/host_template_model/formHostTemplateModel.php:904
 #: centreon-web/www/include/configuration/configObject/host_template_model/formHostTemplateModel.php:948
-#: centreon-web/www/include/core/footer/footer.php:56
 #: centreon-web/www/include/monitoring/objectDetails/serviceDetails.php:487
 #: centreon-web/www/include/monitoring/objectDetails/hostDetails.php:494
 #: centreon-web/www/include/monitoring/downtime/AddDowntime.php:229
@@ -3152,7 +3151,6 @@ msgstr "Groupe"
 #: centreon-web/www/include/configuration/configObject/contactgroup/formContactGroup.php:229
 #: centreon-web/www/include/configuration/configGenerateTraps/formGenerateTraps.php:203
 #: centreon-web/www/include/configuration/configGenerate/formGenerateFiles.php:99
-#: centreon-web/www/include/core/footer/footer.php:79
 #: centreon-web/www/include/core/menu/menu.php:95
 msgid "Help"
 msgstr "Aide"
@@ -9227,7 +9225,6 @@ msgstr "Ne peut être égal à 0"
 #: centreon-web/www/include/configuration/configObject/service/formService.php:1112
 #: centreon-web/www/include/configuration/configObject/service_template_model/formServiceTemplateModel.php:982
 #: centreon-web/www/include/configuration/configObject/hostgroup/formHostGroup.php:336
-#: centreon-web/www/include/core/footer/footer.php:59
 #: centreon-web/www/include/core/menu/menu.php:96
 msgid "Documentation"
 msgstr "Documentation"
@@ -12308,14 +12305,6 @@ msgstr "Vou devez spécifier un mot de passe"
 #: centreon-web/www/include/core/errors/alt_error.php:40
 msgid "You are not allowed to reach this page"
 msgstr "Vous n'êtes pas autorisé à accéder à cette page"
-
-#: centreon-web/www/include/core/footer/footer.php:53
-msgid "Generated in "
-msgstr "Généré en "
-
-#: centreon-web/www/include/core/footer/footer.php:64
-msgid "Help Desk"
-msgstr "Centre des services"
 
 #: centreon-web/www/include/core/menu/menu.php:165
 msgid "Right Click here to add an autologin link directly to your bookmarks"
