@@ -1,12 +1,26 @@
 {
-  "extends": "./node_modules/@centreon/frontend-core/tsconfig/index",
   "compilerOptions": {
     "baseUrl": "./",
     "typeRoots": [
       "./types",
       "./node_modules/@types"
     ],
-    "module": "esnext",
+      "target": "ESNext",
+      "lib": ["DOM", "DOM.Iterable", "ESNext"],
+      "types": ["vite/client"],
+      "allowJs": false,
+      "skipLibCheck": false,
+      "esModuleInterop": false,
+      "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true,
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noEmit": true,
+      "jsx": "react",
+      "strict": true,
+      "noImplicitAny": false,
   },
   "include": [
     "./www/front_src/src"

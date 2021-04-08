@@ -8,7 +8,7 @@ const baseConfig = require('@centreon/frontend-core/webpack/base');
 const extractCssConfig = require('@centreon/frontend-core/webpack/patch/extractCss');
 
 module.exports = merge(baseConfig, extractCssConfig, {
-  entry: ['@babel/polyfill', './www/front_src/src/index.js'],
+  entry: ['@babel/polyfill', './www/front_src/src/index.jsx'],
   output: {
     path: path.resolve(`${__dirname}/www/static`),
     publicPath: './static/',
