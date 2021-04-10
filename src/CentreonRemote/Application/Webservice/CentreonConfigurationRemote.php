@@ -662,6 +662,26 @@ class CentreonConfigurationRemote extends CentreonWebServiceAbstract
             $statement->bindValue(':nagiosId', $topologyInformation['nagios_id'], \PDO::PARAM_INT);
             $statement->bindValue(':topologyId', (int)$server['id'], \PDO::PARAM_INT);
             $statement->execute();
+
+            /**
+             * If it's a remote with attached poller. Update their parent id
+             */
+            if (!empty($topologyInformation['children_pollers'])) {
+                $statement = $this->pearDB->prepare(
+                    "UPDATE `platform_topology`
+                    SET parent_id = :parentId, `pending` = '0'
+                    WHERE server_id = :pollerId"
+                );
+                foreach ($topologyInformation['children_pollers'] as $poller) {
+                    $statement->bindValue(
+                        ':parentId',
+                        (int)$server['id'],
+                        \PDO::PARAM_INT
+                    );
+                    $statement->bindValue(':pollerId', (int)$poller->getId(), \PDO::PARAM_INT);
+                    $statement->execute();
+                }
+            }
         } else {
             $statement = $this->pearDB->prepare(
                 "INSERT INTO `platform_topology` (`address`,`name`,`type`,`parent_id`,`server_id`, `pending`)
@@ -679,24 +699,25 @@ class CentreonConfigurationRemote extends CentreonWebServiceAbstract
             $statement = $this->pearDB->prepare('SELECT MAX(id) as last_id FROM `platform_topology`');
             $statement->execute();
             $insertedPlatform = $statement->fetch(\PDO::FETCH_ASSOC);
-        }
-        /**
-         * If it's a remote with attached poller. Update their parent id
-         */
-        if (!empty($topologyInformation['children_pollers'])) {
-            $statement = $this->pearDB->prepare(
-                "UPDATE `platform_topology`
-                SET parent_id = :parentId, `pending` = '0'
-                WHERE server_id = :pollerId"
-            );
-            foreach ($topologyInformation['children_pollers'] as $poller) {
-                $statement->bindValue(
-                    ':parentId',
-                    (int)$insertedPlatform['last_id'] ?? (int)$server['id'],
-                    \PDO::PARAM_INT
+
+            /**
+             * If it's a remote with attached poller. Update their parent id
+             */
+            if (!empty($topologyInformation['children_pollers'])) {
+                $statement = $this->pearDB->prepare(
+                    "UPDATE `platform_topology`
+                    SET parent_id = :parentId, `pending` = '0'
+                    WHERE server_id = :pollerId"
                 );
-                $statement->bindValue(':pollerId', (int)$poller->getId(), \PDO::PARAM_INT);
-                $statement->execute();
+                foreach ($topologyInformation['children_pollers'] as $poller) {
+                    $statement->bindValue(
+                        ':parentId',
+                        (int)$insertedPlatform['last_id'],
+                        \PDO::PARAM_INT
+                    );
+                    $statement->bindValue(':pollerId', (int)$poller->getId(), \PDO::PARAM_INT);
+                    $statement->execute();
+                }
             }
         }
     }
